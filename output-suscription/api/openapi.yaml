@@ -1,0 +1,307 @@
+openapi: 3.0.3
+info:
+  title: Bookify's Suscription - OpenAPI 3.0
+  description: This is the API implementation for Bookify' suscription operations
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: suscription
+  description: Actions with Bookify's suscriptions
+paths:
+  /suscription:
+    get:
+      tags:
+      - suscription
+      summary: Get all active suscriptions info
+      description: Returns all active suscriptions data
+      operationId: getNSubs
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Suscription'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Suscription'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Suscription not found
+      x-swagger-router-controller: Suscription
+    post:
+      tags:
+      - suscription
+      summary: New suscription
+      description: Creates a new suscription for a Bookify's user
+      operationId: newSub
+      parameters:
+      - name: userId
+        in: query
+        description: The user ID to suscribe
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suscription'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Suscription'
+      x-swagger-router-controller: Suscription
+  /suscription/{userId}:
+    get:
+      tags:
+      - suscription
+      summary: Get user suscription info
+      description: Returns the active suscription data
+      operationId: getAuthor
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user that need to see his suscription info
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suscription'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Suscription'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Suscription not found
+      x-swagger-router-controller: Suscription
+    put:
+      tags:
+      - suscription
+      summary: Update suscription data
+      description: This can only be done by the logged in user.
+      operationId: updateAuthor
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user that need his suscription to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Update an existent user suscription
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Suscription'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Suscription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Suscription'
+      responses:
+        default:
+          description: successful operation
+      x-swagger-router-controller: Suscription
+    delete:
+      tags:
+      - suscription
+      summary: Delete active suscription
+      description: This can only be done by the logged in user.
+      operationId: deleteSuscription
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user that need his suscription to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid user ID supplied
+        "404":
+          description: Suscription not found
+      x-swagger-router-controller: Suscription
+components:
+  schemas:
+    Genre:
+      type: string
+      description: Book genres enum
+      enum:
+      - Fantasy
+      - Sci-Fi
+      - Horror
+      - Adventure
+      - Mistery
+      - Romance
+      - History
+      - Drama
+      - Thriller
+      - Comedy
+      - Poetry
+    Book:
+      required:
+      - author
+      - bookId
+      - genre
+      - name
+      type: object
+      properties:
+        bookId:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Fire & Blood
+        author:
+          type: string
+          example: George R.R. Martin
+        genre:
+          $ref: '#/components/schemas/Genre'
+        ratings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book_ratings'
+        audiobook:
+          $ref: '#/components/schemas/Audiobook'
+        coverUrl:
+          type: string
+          example: https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/Fire_%26_Blood_%282018%29_hardcover.jpg/220px-Fire_%26_Blood_%282018%29_hardcover.jpg
+        status:
+          type: string
+          description: book status in the app
+          enum:
+          - available
+          - updating
+          - unavailable
+      xml:
+        name: book
+    Audiobook:
+      required:
+      - status
+      type: object
+      properties:
+        link:
+          type: string
+          example: https://www.ivoox.com/fuego-sangre-1_md_32713232_1.mp3
+        narrator:
+          type: string
+          example: John Doe
+        duration:
+          type: integer
+          example: 247
+        status:
+          type: string
+          description: audiobook status in the app
+          enum:
+          - available
+          - unavailable
+      xml:
+        name: audiobook
+    Rating:
+      type: object
+      properties:
+        username:
+          type: string
+          example: John
+        comment:
+          type: string
+          example: I loved it!
+        rate:
+          maximum: 5
+          minimum: 1
+          type: number
+          example: 4.7
+      xml:
+        name: rating
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        username:
+          type: string
+          example: johndoe123
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: johndoe@email.com
+        password:
+          type: string
+          example: "12345678"
+      xml:
+        name: user
+    Suscription:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        startDate:
+          type: string
+          example: 16/11/2022
+        endDate:
+          type: string
+          example: 16/12/2022
+        price:
+          type: number
+          example: 5.49
+      example:
+        endDate: 16/12/2022
+        price: 5.49
+        userId: 1
+        startDate: 16/11/2022
+      xml:
+        name: subcription
+    Book_ratings:
+      type: object
+      properties:
+        rating:
+          $ref: '#/components/schemas/Rating'
+  requestBodies:
+    Book:
+      description: Book object that needs to be added to the app
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Book'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Book'
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
