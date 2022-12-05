@@ -10,7 +10,32 @@
  **/
 exports.deleteSuscription = function(userId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    var examples = [ {
+      "endDate" : "16/12/2022",
+      "price" : 5.49,
+      "userId" : 1,
+      "startDate" : "16/11/2022"
+    }, {
+      "endDate" : "14/12/2022",
+      "price" : 5.49,
+      "userId" : 2,
+      "startDate" : "14/11/2022"
+    }, {
+      "endDate" : "12/12/2022",
+      "price" : 5.49,
+      "userId" : 3,
+      "startDate" : "12/11/2022"
+    }, {
+      "endDate" : "21/12/2022",
+      "price" : 5.49,
+      "userId" : 4,
+      "startDate" : "21/11/2022"
+    }];
+    if (userId < 5) {
+      resolve([JSON.stringify("SUSCRIPCIÓN DEL USUARIO " + userId + " CANCELADA"),examples[userId-1]]);
+    } else {
+      reject(JSON.stringify("No hay usuarios con ese ID"));
+    }
   });
 }
 
@@ -22,19 +47,33 @@ exports.deleteSuscription = function(userId) {
  * userId Integer ID of the user that need to see his suscription info
  * returns Suscription
  **/
-exports.getAuthor = function(userId) {
+exports.getSuscription = function(userId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "endDate" : "16/12/2022",
-  "price" : 5.49,
-  "userId" : 1,
-  "startDate" : "16/11/2022"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    var examples = [ {
+      "endDate" : "16/12/2022",
+      "price" : 5.49,
+      "userId" : 1,
+      "startDate" : "16/11/2022"
+    }, {
+      "endDate" : "14/12/2022",
+      "price" : 5.49,
+      "userId" : 2,
+      "startDate" : "14/11/2022"
+    }, {
+      "endDate" : "12/12/2022",
+      "price" : 5.49,
+      "userId" : 3,
+      "startDate" : "12/11/2022"
+    }, {
+      "endDate" : "21/12/2022",
+      "price" : 5.49,
+      "userId" : 4,
+      "startDate" : "21/11/2022"
+    }];
+    if (userId < 5) {
+      resolve([JSON.stringify("SUSCRIPCIÓN ACTIVA DEL USUARIO " + userId),examples[userId-1]]);
     } else {
-      resolve();
+      reject(JSON.stringify("No hay usuarios con ese ID"));
     }
   });
 }
@@ -55,16 +94,22 @@ exports.getNSubs = function() {
   "userId" : 1,
   "startDate" : "16/11/2022"
 }, {
-  "endDate" : "16/12/2022",
+  "endDate" : "14/12/2022",
   "price" : 5.49,
-  "userId" : 1,
-  "startDate" : "16/11/2022"
+  "userId" : 2,
+  "startDate" : "14/11/2022"
+}, {
+  "endDate" : "12/12/2022",
+  "price" : 5.49,
+  "userId" : 3,
+  "startDate" : "12/11/2022"
+}, {
+  "endDate" : "21/12/2022",
+  "price" : 5.49,
+  "userId" : 4,
+  "startDate" : "21/11/2022"
 } ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+  resolve(examples);
   });
 }
 
@@ -77,18 +122,31 @@ exports.getNSubs = function() {
  * returns Suscription
  **/
 exports.newSub = function(userId) {
+  const date = new Date();
+  let day = date.getDate() + 1;
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  let currentDate = `${day}/${month}/${year}`;
+  let dateMonth;
+  if(month == 12){
+    dateMonth = `${day}/${1}/${year+1}`;
+  }
+  else{
+    dateMonth = `${day}/${month+1}/${year}`;
+
+  }
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-  "endDate" : "16/12/2022",
-  "price" : 5.49,
-  "userId" : 1,
-  "startDate" : "16/11/2022"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+      "endDate" : dateMonth,
+      "price" : 5.49,
+      "userId" : userId,
+      "startDate" : currentDate
+    };
+    if (userId < 5) {
+      resolve([JSON.stringify("NUEVA SUSCRIPCIÓN DEL USUARIO " + userId),examples]);
     } else {
-      resolve();
+      reject(JSON.stringify("No hay usuarios con ese ID"));
     }
   });
 }
@@ -102,24 +160,13 @@ exports.newSub = function(userId) {
  * userId Integer ID of the user that need his suscription to be updated
  * no response value expected for this operation
  **/
-exports.updateAuthor = function(body,userId) {
+exports.updateSuscription = function(body,userId) {
   return new Promise(function(resolve, reject) {
-    resolve();
-  });
-}
-
-
-/**
- * Update suscription data
- * This can only be done by the logged in user.
- *
- * body Suscription Update an existent user suscription (optional)
- * userId Integer ID of the user that need his suscription to be updated
- * no response value expected for this operation
- **/
-exports.updateAuthor = function(body,userId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+    if (userId == body.userId) {
+      resolve([JSON.stringify("MODIFICACIÓN DE SUSCRIPCIÓN DEL USUARIO " + userId),body]);
+    } else {
+      reject(JSON.stringify("No puedes cambiar tu ID"));
+    }
   });
 }
 

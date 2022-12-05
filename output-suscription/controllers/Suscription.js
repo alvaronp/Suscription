@@ -13,8 +13,8 @@ module.exports.deleteSuscription = function deleteSuscription (req, res, next, u
     });
 };
 
-module.exports.getAuthor = function getAuthor (req, res, next, userId) {
-  Suscription.getAuthor(userId)
+module.exports.getSuscription = function getSuscription (req, res, next, userId) {
+  Suscription.getSuscription(userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -43,18 +43,8 @@ module.exports.newSub = function newSub (req, res, next, userId) {
     });
 };
 
-module.exports.updateAuthor = function updateAuthor (req, res, next, body, userId) {
-  Suscription.updateAuthor(body, userId)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.updateAuthor = function updateAuthor (req, res, next, body, userId) {
-  Suscription.updateAuthor(body, userId)
+module.exports.updateSuscription = function updateSuscription (req, res, next, body, userId) {
+  Suscription.updateSuscription(body, userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
