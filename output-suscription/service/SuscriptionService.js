@@ -118,10 +118,10 @@ exports.getNSubs = function() {
  * New suscription
  * Creates a new suscription for a Bookify's user
  *
- * userId Integer The user ID to suscribe
+ * body The user ID to suscribe
  * returns Suscription
  **/
-exports.newSub = function(userId) {
+exports.newSub = function(body) {
   const date = new Date();
   let day = date.getDate() + 1;
   let month = date.getMonth() + 1;
@@ -140,11 +140,11 @@ exports.newSub = function(userId) {
     examples['application/json'] = {
       "endDate" : dateMonth,
       "price" : 5.49,
-      "userId" : userId,
+      "userId" : body.id,
       "startDate" : currentDate
     };
-    if (userId < 5) {
-      resolve([JSON.stringify("NUEVA SUSCRIPCIÓN DEL USUARIO " + userId),examples]);
+    if (body.id < 5) {
+      resolve([JSON.stringify("NUEVA SUSCRIPCIÓN DEL USUARIO " + body.id),examples]);
     } else {
       reject(JSON.stringify("No hay usuarios con ese ID"));
     }

@@ -33,8 +33,8 @@ module.exports.getNSubs = function getNSubs (req, res, next) {
     });
 };
 
-module.exports.newSub = function newSub (req, res, next, userId) {
-  Suscription.newSub(userId)
+module.exports.newSub = function newSub (req, res, next, body) {
+  Suscription.newSub(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
